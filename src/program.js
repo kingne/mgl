@@ -14,6 +14,8 @@ export class Program {
 
         this.attributes = null;
         this.uniforms = null;
+        this._attribNames = null;
+        this._uniformNames = null;
 
         this.init();
     }
@@ -85,6 +87,36 @@ export class Program {
                 this.uniforms[info.name] = { info, location };
             }
         }
+    }
+
+    getAttribLocation(name) {
+        return this.attributes[name].location;
+    }
+
+    getUniformLocation(name) {
+        return this.uniforms[name].location;
+    }
+
+    get attribNames() {
+        if (!this._attribNames) {
+            if (!this.attributes) return [];
+            this._attribNames = Object.keys(this.attributes);
+        }
+        return this._attribNames;
+    }
+
+    get uniformNames() {
+        if (!this._uniformNames) {
+            if (!this.uniforms) return [];
+            this._uniformNames = Object.keys(this.uniforms);
+        }
+        return this._uniformNames;
+    }
+
+    use() {
+        if (!this.program) return;
+        this.gl.useProgram(this.program);
+        return this;
     }
 
     delete() {
